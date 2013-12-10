@@ -5,18 +5,21 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.glassthetic.dribbble.api.DribbbleAPI;
 import com.glassthetic.dribbble.api.ErrorListener;
 import com.glassthetic.dribbble.api.Listener;
 import com.glassthetic.dribbble.api.Shot;
-import com.google.android.glass.app.Card;
 
 public class MainActivity extends Activity {
 
-	private Card mLoadingCard;
+	private ProgressBar mProgressBar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +27,17 @@ public class MainActivity extends Activity {
 		
 		DribbbleAPI.setContext(this);
 		
-		mLoadingCard = new Card(this);
-		mLoadingCard.setText(R.string.loading);
-		setContentView(mLoadingCard.toView());
+		setContentView(R.layout.loading);
+		mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+		mProgressBar.setVisibility(View.VISIBLE);
+		mProgressBar.getIndeterminateDrawable().setColorFilter(Color.WHITE, Mode.SRC_IN);
 		
 		Shot.getPopular(new Listener<List<Shot>>() {
 
 			@Override
 			public void onResponse(List<Shot> shots) {
+				mProgressBar.setVisibility(View.GONE);
+				
 				Intent intent = new Intent();
 				intent.setClass(MainActivity.this, ShotsActivity.class);
 				intent.putParcelableArrayListExtra(Constants.SHOTS_PARCEL, (ArrayList<? extends Parcelable>) new ArrayList<Shot>(shots));
