@@ -42,7 +42,10 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 				
 				// Instead, the user could return to this activity
-				// and select from Popular, Everyone, or Debuts. 
+				// and select from Popular, Everyone, or Debuts.
+				//
+				// Consider http://stackoverflow.com/q/12358485/339925
+				// instead of finish()
 				finish();
 			}
 		}, new ErrorListener() {
