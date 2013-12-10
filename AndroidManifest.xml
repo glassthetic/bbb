@@ -29,6 +29,9 @@
         	    android:name="com.google.android.glass.VoiceTrigger"
         	    android:resource="@xml/glass_voice_trigger" />
         </activity>
+        
+        <activity
+            android:name="com.glassthetic.bbb.ShotsActivity" />
     </application>
 
 </manifest>
