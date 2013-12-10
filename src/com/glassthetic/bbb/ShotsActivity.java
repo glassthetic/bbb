@@ -3,18 +3,21 @@ package com.glassthetic.bbb;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+
 import com.glassthetic.dribbble.api.Shot;
 import com.google.android.glass.app.Card;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-
-public class ShotsActivity extends Activity {
+public class ShotsActivity extends Activity implements AdapterView.OnItemClickListener {
 
 	private ShotCardScrollAdapter mAdapter;
 	private List<Card> mCards;
@@ -41,11 +44,24 @@ public class ShotsActivity extends Activity {
 		}
 		
 		mCardScrollView = new CardScrollView(this);
+		mCardScrollView.setOnItemClickListener(this);
 		mAdapter = new ShotCardScrollAdapter();
 		mCardScrollView.setAdapter(mAdapter);
 		mCardScrollView.activate();
 		
 		setContentView(mCardScrollView);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.shot, menu);
+		return true;
+	}
+	
+	@Override
+	public void onItemClick(android.widget.AdapterView<?> adapterView, View view, int position, long id) {
+		openOptionsMenu();
 	}
 	
 	
