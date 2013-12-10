@@ -41,6 +41,8 @@ public class MainActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setClass(MainActivity.this, ShotsActivity.class);
 				intent.putParcelableArrayListExtra(Constants.SHOTS_PARCEL, (ArrayList<? extends Parcelable>) new ArrayList<Shot>(shots));
+				// Here we can pass additional parameters to prevent the user from going back
+				// http://developer.android.com/guide/components/tasks-and-back-stack.html
 				startActivity(intent);
 			}
 		}, new ErrorListener() {

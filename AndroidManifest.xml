@@ -15,6 +15,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         
+        <!-- Here we can provide 2 activities which have the same voice trigger -->
+        <!-- This will produce a limited list of options -->
+        <!-- The disambiguation will be driven by the label -->
         <activity
             android:name="com.glassthetic.bbb.MainActivity"
             android:label="@string/app_name"
