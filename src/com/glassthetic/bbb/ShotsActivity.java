@@ -33,11 +33,14 @@ public class ShotsActivity extends Activity implements AdapterView.OnItemClickLi
 		mCards = new ArrayList<Card>();
 		
 		Card card;
+		String numberOfLikes;
+		int resourceId = R.string.number_of_likes;
 		
 		for (Shot shot : shots) {
 			card = new Card(ShotsActivity.this);
 			card.setText(shot.title);
-			card.setInfo(shot.player.name);
+			numberOfLikes = getResources().getString(resourceId, shot.likesCount);
+			card.setInfo(numberOfLikes);
 //			card.setFullScreenImages(true);
 //			card.addImage();
 			mCards.add(card);
