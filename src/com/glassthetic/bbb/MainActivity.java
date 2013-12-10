@@ -35,15 +35,15 @@ public class MainActivity extends Activity {
 		Shot.getPopular(new Listener<List<Shot>>() {
 
 			@Override
-			public void onResponse(List<Shot> shots) {
-				mProgressBar.setVisibility(View.GONE);
-				
+			public void onResponse(List<Shot> shots) {			
 				Intent intent = new Intent();
 				intent.setClass(MainActivity.this, ShotsActivity.class);
 				intent.putParcelableArrayListExtra(Constants.SHOTS_PARCEL, (ArrayList<? extends Parcelable>) new ArrayList<Shot>(shots));
-				// Here we can pass additional parameters to prevent the user from going back
-				// http://developer.android.com/guide/components/tasks-and-back-stack.html
 				startActivity(intent);
+				
+				// Instead, the user could return to this activity
+				// and select from Popular, Everyone, or Debuts. 
+				finish();
 			}
 		}, new ErrorListener() {
 			
