@@ -17,7 +17,7 @@ import com.google.android.glass.app.Card;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
-public class ShotsActivity extends Activity implements AdapterView.OnItemClickListener {
+public class DisplayShotsActivity extends Activity implements AdapterView.OnItemClickListener {
 
 	private ShotCardScrollAdapter mAdapter;
 	private List<Card> mCards;
@@ -37,7 +37,7 @@ public class ShotsActivity extends Activity implements AdapterView.OnItemClickLi
 		int resourceId = R.string.number_of_likes;
 		
 		for (Shot shot : shots) {
-			card = new Card(ShotsActivity.this);
+			card = new Card(DisplayShotsActivity.this);
 			card.setText(shot.title);
 			numberOfLikes = getResources().getString(resourceId, shot.likesCount);
 			card.setInfo(numberOfLikes);
