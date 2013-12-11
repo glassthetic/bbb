@@ -34,7 +34,14 @@
         </activity>
         
         <activity
-            android:name="com.glassthetic.bbb.ShotsActivity" />
+            android:name="com.glassthetic.bbb.DisplayShotsActivity" />
+        
+        <activity
+            android:name="com.glassthetic.bbb.DebutsShotsRequestActivity" />
+        <activity
+            android:name="com.glassthetic.bbb.EveryoneShotsRequestActivity" />
+        <activity
+            android:name="com.glassthetic.bbb.PopularShotsRequestActivity" />
     </application>
 
 </manifest>

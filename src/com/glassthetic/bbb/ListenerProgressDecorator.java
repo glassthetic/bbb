@@ -22,7 +22,7 @@ public class ListenerProgressDecorator<T> extends ListenerDecorator<T> {
 	
 	@Override
 	public void onResponse(T response) {
-		this.listener.onResponse(response);
+		listener.onResponse(response);
 		mProgressBar.setVisibility(View.GONE);
 	}
 }
@@ -36,6 +36,6 @@ abstract class ListenerDecorator<T> implements Listener<T> {
 	
 	@Override
 	public void onResponse(T response) {
-		this.listener.onResponse(response);
+		listener.onResponse(response);
 	}
 }
