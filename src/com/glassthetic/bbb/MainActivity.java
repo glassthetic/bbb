@@ -8,13 +8,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.glassthetic.dribbble.api.DribbbleAPI;
+import com.google.android.glass.view.MenuUtils;
 
 public class MainActivity extends Activity {
+	
+	private static MenuItem mSelectedOptionsMenuItem;
+	private Boolean mOptionsMenuItemSelected = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DribbbleAPI.setContext(this);		
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 		openOptionsMenu();
 	}
 	
@@ -27,6 +36,9 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		mSelectedOptionsMenuItem = item;
+		mOptionsMenuItemSelected = true;
+		
 		switch (item.getItemId()) {
 			case R.id.view_debuts_menu_item:
 				startActivity(new Intent(this, DebutsShotsRequestActivity.class));
@@ -43,8 +55,22 @@ public class MainActivity extends Activity {
 	}
 	
 	@Override
-	protected void onResume() {
-		super.onResume();
-//		openOptionsMenu();
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (mSelectedOptionsMenuItem != null) {
+			MenuUtils.setInitialMenuItem(menu, mSelectedOptionsMenuItem);
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public void onOptionsMenuClosed(Menu menu) {
+		super.onOptionsMenuClosed(menu);
+		
+		if (mOptionsMenuItemSelected) {
+			mOptionsMenuItemSelected = false;
+		} else {
+			finish();
+		}
 	}
 }
