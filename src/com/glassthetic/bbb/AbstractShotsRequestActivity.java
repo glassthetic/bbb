@@ -18,7 +18,7 @@ abstract class AbstractShotsRequestActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Listener<List<Shot>> listener = new ListenerProgressDecorator<List<Shot>>(this, new Listener<List<Shot>>() {
+		Listener<List<Shot>> listener = new Listener<List<Shot>>() {
 			
 			@Override
 			public void onResponse(List<Shot> shots) {			
@@ -32,7 +32,10 @@ abstract class AbstractShotsRequestActivity extends Activity {
 				// instead of finish()
 				finish();
 			}
-		});
+		};
+		
+		listener = new ListenerProgressDecorator<List<Shot>>(this, listener);
+		
 		
 		ErrorListener errorListener = new ErrorListener() {
 			
