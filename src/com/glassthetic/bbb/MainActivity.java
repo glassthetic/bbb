@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		DribbbleAPI.setContext(this);		
+		DribbbleAPI.init(this);
 	}
 
 	@Override
