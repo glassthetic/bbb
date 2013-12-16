@@ -76,6 +76,7 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 					try {
 						cacheFile.createNewFile();
 						FileOutputStream fos = new FileOutputStream(cacheFile);
+						// FIXME use different compression formats based on image extension
 						bitmap.compress(CompressFormat.PNG, 100, fos);
 						fos.flush();
 						fos.close();
