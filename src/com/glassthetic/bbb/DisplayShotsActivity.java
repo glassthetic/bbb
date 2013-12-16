@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.SparseIntArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -19,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.glassthetic.dribbble.api.ErrorListener;
-import com.glassthetic.dribbble.api.Listener;
+import com.glassthetic.dribbble.api.IndexedListener;
 import com.glassthetic.dribbble.api.Shot;
 import com.google.android.glass.app.Card;
 import com.google.android.glass.widget.CardScrollAdapter;
@@ -30,7 +29,7 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 	private ShotCardScrollAdapter mAdapter;
 	private List<Card> mCards;
 	private CardScrollView mCardScrollView;
-	private SparseIntArray mShotCardMapping = new SparseIntArray();
+	private List<Integer> mShotIds;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,33 +39,43 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 		List<Shot> shots = intent.getParcelableArrayListExtra(Constants.SHOTS_PARCEL);
 		
 		mCards = new ArrayList<Card>();
+		mCardScrollView = new CardScrollView(this);
+		mCardScrollView.setOnItemClickListener(this);
+		mAdapter = new ShotCardScrollAdapter();
+		mCardScrollView.setAdapter(mAdapter);
+		mShotIds = new ArrayList<Integer>();
+		mCardScrollView.activate();
+		
+		setContentView(mCardScrollView);
 		
 		Card card;
 		String numberOfLikes;
-		int index = 0;
 		int resourceId = R.string.number_of_likes;
 		
-		for (final Shot shot : shots) {
+		for (int i = 0; i < shots.size(); i++) {
+			Shot shot = shots.get(i);
+			
 			card = new Card(this);
 			card.setText(shot.title);
 			numberOfLikes = getResources().getString(resourceId, shot.likesCount);
 			card.setInfo(numberOfLikes);
 			card.setFullScreenImages(true);
 			
-			mShotCardMapping.append(shot.id, index);
 			mCards.add(card);
-			
+			mShotIds.add(shot.id);
 			
 			final File cacheDir = new File(getBaseContext().getCacheDir(), "images");
 			cacheDir.mkdirs();
 			
-			shot.getImage(new Listener<Bitmap>() {
-				
+			shot.getImage(new IndexedListener<Bitmap>(i) {
+
 				@Override
 				public void onResponse(Bitmap bitmap) {
-					File cacheFile = new File(cacheDir, shot.id + "");
+					int index = this.getIndex();				
+					int shotId = mShotIds.get(index);
+					File cacheFile = new File(cacheDir, shotId + "");
 					
-                    try {
+					try {
 						cacheFile.createNewFile();
 						FileOutputStream fos = new FileOutputStream(cacheFile);
 						bitmap.compress(CompressFormat.PNG, 100, fos);
@@ -76,12 +85,12 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-                  
-                    int position = mShotCardMapping.get(shot.id);
-                    Card card = (Card) mAdapter.getItem(position);
-        			card.addImage(Uri.fromFile(cacheFile));
-        			mCardScrollView.updateViews(true);
+                
+					Card card = (Card) mAdapter.getItem(index);
+      				card.addImage(Uri.fromFile(cacheFile));
+      				mCardScrollView.updateViews(true);
 				}
+				
 			}, new ErrorListener() {
 				
 				@Override
@@ -90,21 +99,7 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 					
 				}
 			});
-			
-			index++;
-			
-//			if (index == 2) {
-//				break;
-//			}
 		}
-		
-		mCardScrollView = new CardScrollView(this);
-		mCardScrollView.setOnItemClickListener(this);
-		mAdapter = new ShotCardScrollAdapter();
-		mCardScrollView.setAdapter(mAdapter);
-		mCardScrollView.activate();
-		
-		setContentView(mCardScrollView);
 	}
 	
 	@Override
