@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.glassthetic.dribbble.api.ErrorListener;
-import com.glassthetic.dribbble.api.Listener;
+import com.glassthetic.dribbble.api.Paginator;
+import com.glassthetic.dribbble.api.PaginatedListener;
 import com.glassthetic.dribbble.api.Shot;
 
 import android.app.Activity;
@@ -18,13 +19,14 @@ abstract class AbstractShotsRequestActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Listener<List<Shot>> listener = new Listener<List<Shot>>() {
+		PaginatedListener<List<Shot>> listener = new PaginatedListener<List<Shot>>() {
 			
 			@Override
-			public void onResponse(List<Shot> shots) {			
+			public void onPaginatedResponse(List<Shot> shots, Paginator paginator) {			
 				Intent intent = new Intent();
 				intent.setClass(AbstractShotsRequestActivity.this, DisplayShotsActivity.class);
 				intent.putParcelableArrayListExtra(Constants.SHOTS_PARCEL, (ArrayList<? extends Parcelable>) new ArrayList<Shot>(shots));
+				intent.putExtra(Constants.PAGINATOR_PARCEL, paginator);
 				//intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 				startActivity(intent);
 				
@@ -34,7 +36,7 @@ abstract class AbstractShotsRequestActivity extends Activity {
 			}
 		};
 		
-		listener = new ListenerProgressDecorator<List<Shot>>(this, listener);
+		//listener = new ListenerProgressDecorator<List<Shot>>(this, listener);
 		
 		
 		ErrorListener errorListener = new ErrorListener() {
@@ -49,5 +51,5 @@ abstract class AbstractShotsRequestActivity extends Activity {
 		requestShots(listener, errorListener);
 	}
 	
-	abstract void requestShots(Listener<List<Shot>> listener, ErrorListener errorListener);
+	abstract void requestShots(PaginatedListener<List<Shot>> listener, ErrorListener errorListener);
 }

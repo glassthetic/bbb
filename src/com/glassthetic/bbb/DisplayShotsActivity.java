@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 
 import com.glassthetic.dribbble.api.ErrorListener;
 import com.glassthetic.dribbble.api.IndexedListener;
+import com.glassthetic.dribbble.api.PaginatedListener;
+import com.glassthetic.dribbble.api.Paginator;
 import com.glassthetic.dribbble.api.Shot;
 import com.google.android.glass.app.Card;
 import com.google.android.glass.widget.CardScrollAdapter;
@@ -37,6 +39,25 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 		
 		Intent intent = getIntent();
 		List<Shot> shots = intent.getParcelableArrayListExtra(Constants.SHOTS_PARCEL);
+		Paginator paginator = intent.getParcelableExtra(Constants.PAGINATOR_PARCEL);
+		
+		// Begin testing paginator
+		paginator.nextPage(new PaginatedListener<List<Shot>>() {
+
+			@Override
+			public void onPaginatedResponse(List<Shot> shots, Paginator paginator) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, new ErrorListener() {
+			
+			@Override
+			public void onErrorResponse(Exception exception) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		// End testing paginator
 		
 		mCards = new ArrayList<Card>();
 		mShotIds = new ArrayList<Integer>();
