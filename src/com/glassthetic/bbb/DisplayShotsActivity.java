@@ -42,7 +42,7 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 		Paginator paginator = intent.getParcelableExtra(Constants.PAGINATOR_PARCEL);
 		
 		// Begin testing paginator
-		paginator.nextPage(new PaginatedListener<List<Shot>>() {
+		paginator.nextPage(new PaginatedListener<Shot>() {
 
 			@Override
 			public void onPaginatedResponse(List<Shot> shots, Paginator paginator) {

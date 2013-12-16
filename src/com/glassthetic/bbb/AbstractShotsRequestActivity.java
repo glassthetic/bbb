@@ -19,7 +19,7 @@ abstract class AbstractShotsRequestActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		PaginatedListener<List<Shot>> listener = new PaginatedListener<List<Shot>>() {
+		PaginatedListener<Shot> listener = new PaginatedListener<Shot>() {
 			
 			@Override
 			public void onPaginatedResponse(List<Shot> shots, Paginator paginator) {			
@@ -51,5 +51,5 @@ abstract class AbstractShotsRequestActivity extends Activity {
 		requestShots(listener, errorListener);
 	}
 	
-	abstract void requestShots(PaginatedListener<List<Shot>> listener, ErrorListener errorListener);
+	abstract void requestShots(PaginatedListener<Shot> listener, ErrorListener errorListener);
 }
