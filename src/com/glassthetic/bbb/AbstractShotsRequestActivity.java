@@ -22,7 +22,7 @@ abstract class AbstractShotsRequestActivity extends Activity {
 		PaginatedListener<Shot> listener = new PaginatedListener<Shot>() {
 			
 			@Override
-			public void onPaginatedResponse(List<Shot> shots, Paginator paginator) {			
+			public void onPaginatedResponse(List<Shot> shots, Paginator<Shot> paginator) {			
 				Intent intent = new Intent();
 				intent.setClass(AbstractShotsRequestActivity.this, DisplayShotsActivity.class);
 				intent.putParcelableArrayListExtra(Constants.SHOTS_PARCEL, (ArrayList<? extends Parcelable>) new ArrayList<Shot>(shots));
