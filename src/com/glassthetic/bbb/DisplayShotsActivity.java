@@ -39,14 +39,12 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 		List<Shot> shots = intent.getParcelableArrayListExtra(Constants.SHOTS_PARCEL);
 		
 		mCards = new ArrayList<Card>();
+		mShotIds = new ArrayList<Integer>();
+		
 		mCardScrollView = new CardScrollView(this);
 		mCardScrollView.setOnItemClickListener(this);
 		mAdapter = new ShotCardScrollAdapter();
 		mCardScrollView.setAdapter(mAdapter);
-		mShotIds = new ArrayList<Integer>();
-		mCardScrollView.activate();
-		
-		setContentView(mCardScrollView);
 		
 		Card card;
 		String numberOfLikes;
@@ -100,6 +98,9 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 				}
 			});
 		}
+		
+		mCardScrollView.activate();
+		setContentView(mCardScrollView);
 	}
 	
 	@Override
