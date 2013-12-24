@@ -2,6 +2,7 @@ package com.glassthetic.bbb;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 	private ShotCardScrollAdapter mAdapter;
 	private List<Card> mCards;
 	private CardScrollView mCardScrollView;
-	private List<Integer> mShotIds;
+	private List<File> mFiles;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 		List<Shot> shots = intent.getParcelableArrayListExtra(Constants.SHOTS_PARCEL);
 		
 		mCards = new ArrayList<Card>();
-		mShotIds = new ArrayList<Integer>();
+		mFiles = new ArrayList<File>();
 		
 		mCardScrollView = new CardScrollView(this);
 		mCardScrollView.setOnItemClickListener(this);
@@ -49,6 +50,9 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 		Card card;
 		String numberOfLikes;
 		int resourceId = R.string.number_of_likes;
+		
+		final File cacheDir = new File(getBaseContext().getCacheDir(), "images");
+		cacheDir.mkdirs();
 		
 		for (int i = 0; i < shots.size(); i++) {
 			Shot shot = shots.get(i);
@@ -60,33 +64,40 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 			card.setImageLayout(Card.ImageLayout.FULL);
 			
 			mCards.add(card);
-			mShotIds.add(shot.id);
 			
-			final File cacheDir = new File(getBaseContext().getCacheDir(), "images");
-			cacheDir.mkdirs();
+			
+			File file = new File(cacheDir, shot.id + "");
+			
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			mFiles.add(file);
+			
 			
 			shot.getImage(new IndexedListener<Bitmap>(i) {
 
 				@Override
 				public void onResponse(Bitmap bitmap) {
 					int index = this.getIndex();				
-					int shotId = mShotIds.get(index);
-					File cacheFile = new File(cacheDir, shotId + "");
+					File file = mFiles.get(index);
 					
 					try {
-						cacheFile.createNewFile();
-						FileOutputStream fos = new FileOutputStream(cacheFile);
+						FileOutputStream stream = new FileOutputStream(file);
 						// FIXME use different compression formats based on image extension
-						bitmap.compress(CompressFormat.PNG, 100, fos);
-						fos.flush();
-						fos.close();
+						bitmap.compress(CompressFormat.PNG, 0, stream);
+						stream.flush();
+						stream.close();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
                 
 					Card card = (Card) mAdapter.getItem(index);
-      				card.addImage(Uri.fromFile(cacheFile));
+      				card.addImage(Uri.fromFile(file));
       				mCardScrollView.updateViews(true);
 				}
 				
