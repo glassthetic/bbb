@@ -56,8 +56,8 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 			card = new Card(this);
 			card.setText(shot.title);
 			numberOfLikes = getResources().getString(resourceId, shot.likesCount);
-			card.setInfo(numberOfLikes);
-			card.setFullScreenImages(true);
+			card.setFootnote(numberOfLikes);
+			card.setImageLayout(Card.ImageLayout.FULL);
 			
 			mCards.add(card);
 			mShotIds.add(shot.id);
