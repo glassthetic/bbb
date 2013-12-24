@@ -1,16 +1,12 @@
 package com.glassthetic.bbb;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,75 +26,47 @@ public class DisplayShotsActivity extends Activity implements AdapterView.OnItem
 	private ShotCardScrollAdapter mAdapter;
 	private List<Card> mCards;
 	private CardScrollView mCardScrollView;
-	private List<File> mFiles;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		Intent intent = getIntent();
-		List<Shot> shots = intent.getParcelableArrayListExtra(Constants.SHOTS_PARCEL);
+		final List<Shot> shots = intent.getParcelableArrayListExtra(Constants.SHOTS_PARCEL);
 		
 		mCards = new ArrayList<Card>();
-		mFiles = new ArrayList<File>();
 		
 		mCardScrollView = new CardScrollView(this);
 		mCardScrollView.setOnItemClickListener(this);
 		mAdapter = new ShotCardScrollAdapter();
 		mCardScrollView.setAdapter(mAdapter);
 		
-		Card card;
-		String numberOfLikes;
-		int resourceId = R.string.number_of_likes;
+		int numberOfLikesText = R.string.number_of_likes;
 		
-		final File cacheDir = new File(getBaseContext().getCacheDir(), "images");
+		final File cacheDir = new File(DisplayShotsActivity.this.getCacheDir(), "images");
 		cacheDir.mkdirs();
 		
 		for (int i = 0; i < shots.size(); i++) {
 			Shot shot = shots.get(i);
 			
-			card = new Card(this);
+			Card card = new Card(this);
 			card.setText(shot.title);
-			numberOfLikes = getResources().getString(resourceId, shot.likesCount);
-			card.setFootnote(numberOfLikes);
+			card.setFootnote(getResources().getString(numberOfLikesText, shot.likesCount));
 			card.setImageLayout(Card.ImageLayout.FULL);
 			
 			mCards.add(card);
 			
-			
-			File file = new File(cacheDir, shot.id + "");
-			
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			mFiles.add(file);
-			
-			
+			// TODO: try loading next images on focus of current image
 			shot.getImage(new IndexedListener<Bitmap>(i) {
 
 				@Override
 				public void onResponse(Bitmap bitmap) {
-					int index = this.getIndex();				
-					File file = mFiles.get(index);
-					
-					try {
-						FileOutputStream stream = new FileOutputStream(file);
-						// FIXME use different compression formats based on image extension
-						bitmap.compress(CompressFormat.PNG, 0, stream);
-						stream.flush();
-						stream.close();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-                
+					int index = this.getIndex();
 					Card card = (Card) mAdapter.getItem(index);
-      				card.addImage(Uri.fromFile(file));
-      				mCardScrollView.updateViews(true);
+					Shot shot = shots.get(index);
+					
+					BitmapWorkerTask task = new BitmapWorkerTask(cacheDir, shot, bitmap, card, mCardScrollView);
+					task.execute();
 				}
 				
 			}, new ErrorListener() {
