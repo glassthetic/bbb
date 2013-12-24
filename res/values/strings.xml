@@ -1,5 +1,14 @@
 <resources>
 
     <string name="app_name">bbb</string>
+    <string name="glass_voice_trigger">inspire me</string>
+    <string name="loading">Loading</string>
+    <string name="number_of_likes">&#x2665; %d</string>
+    <string name="view_comments">Comments</string>
+    <string name="view_debuts">Debuts</string>
+    <string name="view_everyone">Everyone</string>
+    <string name="view_player">Player</string>
+    <string name="view_popular">Popular shots</string>
+    <string name="view_rebounds">Rebounds</string>
 
 </resources>
